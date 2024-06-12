@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application/dbservices.dart';
+import 'package:flutter_application/services/dbservices.dart';
+import 'package:flutter_application/services/notif.dart';
 
 class DetailTask extends StatefulWidget {
   final String title;
@@ -7,6 +8,7 @@ class DetailTask extends StatefulWidget {
   final String time;
   final String desc;
   final String tags;
+  final int idNotif;
 
   const DetailTask(
       {super.key,
@@ -14,7 +16,8 @@ class DetailTask extends StatefulWidget {
       required this.date,
       required this.time,
       required this.desc,
-      required this.tags});
+      required this.tags,
+      required this.idNotif});
 
   @override
   State<DetailTask> createState() => _DetailTaskState();
@@ -100,15 +103,18 @@ class _DetailTaskState extends State<DetailTask> {
                   _buttonStatus(
                       title: widget.title,
                       text: "Completed",
-                      newStatus: "completed"),
+                      newStatus: "completed",
+                      idNotif: widget.idNotif),
                   _buttonStatus(
                       title: widget.title,
                       text: "Pending",
-                      newStatus: "pending"),
+                      newStatus: "pending",
+                      idNotif: widget.idNotif),
                   _buttonStatus(
                       title: widget.title,
                       text: "Canceled",
-                      newStatus: "canceled"),
+                      newStatus: "canceled",
+                      idNotif: widget.idNotif),
                 ],
               ),
             )
@@ -151,13 +157,15 @@ class _DetailTaskState extends State<DetailTask> {
   Widget _buttonStatus(
       {required String title,
       required String text,
-      required String newStatus}) {
+      required String newStatus,
+      required int idNotif}) {
     return SizedBox(
       width: 110,
       height: 40,
       child: ElevatedButton(
         onPressed: () {
           final changeData = {'status': newStatus};
+          Notif.cancelScheduledNotif(idNotif);
           Database.updateData(idDocs: title, data: changeData);
           Navigator.pop(context);
         },

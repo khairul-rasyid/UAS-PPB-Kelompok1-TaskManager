@@ -41,7 +41,7 @@ class Database {
   }
 
   static Future<void> updateData(
-      {required String idDocs, required Map<String, dynamic> data}) async {
+      {required String idDocs, required Map<String, String> data}) async {
     DocumentReference<Object?> docRef = tblTask.doc(idDocs);
 
     await docRef
@@ -50,5 +50,9 @@ class Database {
         .whenComplete(() => print("data berhasil diupdate"))
         // ignore: avoid_print
         .catchError((e) => print(e));
+  }
+
+  static Future<void> deleteData({required String docsName}) async {
+    await tblTask.doc(docsName).delete();
   }
 }

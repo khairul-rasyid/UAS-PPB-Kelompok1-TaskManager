@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application/services/notif.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_application/add_task.dart';
-import 'package:flutter_application/dbservices.dart';
-import 'package:flutter_application/detail_task.dart';
+import 'package:flutter_application/page/add_task.dart';
+import 'package:flutter_application/services/dbservices.dart';
+import 'package:flutter_application/page/detail_task.dart';
 import 'package:intl/intl.dart';
 
 class TaskPage extends StatefulWidget {
-  final User user;
-  const TaskPage({super.key, required this.user});
+  final User? user;
+  const TaskPage({super.key, this.user});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -30,7 +31,7 @@ class _TaskPageState extends State<TaskPage> {
   @override
   void initState() {
     _searchTask.addListener(onSearchTask);
-    userData = widget.user;
+    userData = widget.user!;
     super.initState();
     _selectedDay = DateTime.now();
     _calendarFormat = CalendarFormat.week;
@@ -109,21 +110,26 @@ class _TaskPageState extends State<TaskPage> {
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
                         DocumentSnapshot clData = snapshot.data!.docs[index];
-                        String dtTitle = clData['title'];
-                        DateTime utcTime =
+                        DateTime utc8 =
                             (clData['datetime'] as Timestamp).toDate();
-                        DateTime localTime = utcTime.toLocal();
+                        DateTime dateTime =
+                            utc8.subtract(const Duration(hours: 8));
+                        DateTime localTime = dateTime.toLocal();
+
+                        String dtTitle = clData['title'];
                         String dtDate =
                             DateFormat('dd MMMM yyyy').format(localTime);
                         String dtTime = DateFormat('HH:mm').format(localTime);
                         String dtDesc = clData['desc'];
                         String dtTags = clData['tags'];
+                        int dtIdNotif = clData['idNotif'];
                         return _buildTask(
                             title: dtTitle,
                             date: dtDate,
                             time: dtTime,
                             desc: dtDesc,
-                            tags: dtTags);
+                            tags: dtTags,
+                            idNotif: dtIdNotif);
                       },
                       itemCount: snapshot.data!.docs.length,
                     );
@@ -197,20 +203,26 @@ class _TaskPageState extends State<TaskPage> {
     required String time,
     required String desc,
     required String tags,
+    required int idNotif,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: ListTile(
+        onLongPress: () {
+          _deleteTaskDialog(context, idNotif, title);
+        },
         onTap: () {
           Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => DetailTask(
-                    title: title,
-                    date: date,
-                    time: time,
-                    desc: desc,
-                    tags: tags)),
+                      title: title,
+                      date: date,
+                      time: time,
+                      desc: desc,
+                      tags: tags,
+                      idNotif: idNotif,
+                    )),
           );
         },
         tileColor: _tileColor(tags: tags),
@@ -293,6 +305,47 @@ class _TaskPageState extends State<TaskPage> {
         color: Colors.white,
         size: 18,
       ),
+    );
+  }
+
+  void _deleteTaskDialog(BuildContext context, int idNotif, String title) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Center(
+              child: Text(
+            'Delete Task',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+          )),
+          content: const Text(
+            'Are you sure to delete this task?',
+            style: TextStyle(fontSize: 18),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'No',
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Notif.cancelScheduledNotif(idNotif);
+                Database.deleteData(docsName: title);
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'Yes',
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
