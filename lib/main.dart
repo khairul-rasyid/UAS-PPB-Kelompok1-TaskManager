@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_application/services/auth.dart';
 import 'package:flutter_application/pages/list_task.dart';
 import 'package:flutter_application/pages/task.dart';
-import 'package:flutter_application/services/dbservices.dart';
 import 'package:flutter_application/pages/profile.dart';
+import 'package:flutter_application/services/auth.dart';
 import 'package:flutter_application/services/notif.dart';
+import 'package:flutter_application/services/dbservices.dart';
 import 'firebase_options.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
