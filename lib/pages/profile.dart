@@ -1,13 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application/services/auth.dart';
-<<<<<<<< HEAD:lib/pages/profile.dart
 import 'package:flutter_application/pages/list_task.dart';
 import 'package:flutter_application/pages/login.dart';
-========
-import 'package:flutter_application/page/list_task.dart';
-import 'package:flutter_application/page/login.dart';
->>>>>>>> eb657462dadad81dd24b5fc2a652e59d15647f12:lib/page/profile.dart
 
 class ProfilePage extends StatefulWidget {
   final User user;
