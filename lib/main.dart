@@ -192,7 +192,7 @@ class HomePage extends StatelessWidget {
                   ),
                   StreamBuilder<int>(
                     stream: Database.getTaskCountByStatusStream(
-                        userUid: user.uid, status: "completed"),
+                        userUid: user.uid, status: "pending"),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         final count = snapshot.data!;
@@ -222,20 +222,9 @@ class HomePage extends StatelessWidget {
                           ));
                     },
                   ),
-                  // StaggeredGridTile.count(
-                  //     crossAxisCellCount: 4,
-                  //     mainAxisCellCount: 3,
-                  //     child: TaskCardNew(
-                  //       userUid: user.uid,
-                  //       iconData: Icons.access_time,
-                  //       cardName: "Pending",
-                  //       numberOfTasks: "86 Tasks",
-                  //       backgroundColor: const Color(0xFF7D88E7),
-                  //       textColor: Colors.white,
-                  //     )),
                   StreamBuilder<int>(
                     stream: Database.getTaskCountByStatusStream(
-                        userUid: user.uid, status: "completed"),
+                        userUid: user.uid, status: "on going"),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         final count = snapshot.data!;
@@ -267,20 +256,9 @@ class HomePage extends StatelessWidget {
                           ));
                     },
                   ),
-                  // StaggeredGridTile.count(
-                  //     crossAxisCellCount: 4,
-                  //     mainAxisCellCount: 4.2,
-                  //     child: TaskCardNew(
-                  //       userUid: user.uid,
-                  //       cardName: "On Going",
-                  //       numberOfTasks: "86 Tasks",
-                  //       backgroundColor: const Color(0xFF81E89E),
-                  //       textColor: const Color(0xFF12175E),
-                  //       imgSrc: "assets/images/folder-1.png",
-                  //     )),
                   StreamBuilder<int>(
                     stream: Database.getTaskCountByStatusStream(
-                        userUid: user.uid, status: "completed"),
+                        userUid: user.uid, status: "canceled"),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         final count = snapshot.data!;
@@ -292,7 +270,7 @@ class HomePage extends StatelessWidget {
                               userUid: user.uid,
                               cardName: "Canceled",
                               numberOfTasks: "$count Tasks",
-                              backgroundColor: const Color(0xFF7DC8E7),
+                              backgroundColor: const Color(0xFFE77D7D),
                               textColor: Colors.white,
                             ));
                       } else if (snapshot.hasError) {
