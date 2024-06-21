@@ -4,9 +4,9 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_application/page/add_task.dart';
+import 'package:flutter_application/pages/add_task.dart';
 import 'package:flutter_application/services/dbservices.dart';
-import 'package:flutter_application/page/detail_task.dart';
+import 'package:flutter_application/pages/detail_task.dart';
 import 'package:intl/intl.dart';
 
 class TaskPage extends StatefulWidget {

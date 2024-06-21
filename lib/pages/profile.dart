@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application/services/auth.dart';
-import 'package:flutter_application/page/list_task.dart';
-import 'package:flutter_application/page/login.dart';
+import 'package:flutter_application/pages/list_task.dart';
+import 'package:flutter_application/pages/login.dart';
 
 class ProfilePage extends StatefulWidget {
   final User user;
@@ -54,12 +54,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 trailing: GestureDetector(
                   onTap: () {
                     _logoutDialog(context);
-                    // signOut();
-                    // Navigator.pushReplacement(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //       builder: (context) => const LoginPage()),
-                    // );
                   },
                   child: const Icon(
                     Icons.logout,

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_application/services/auth.dart';
-import 'package:flutter_application/page/list_task.dart';
-import 'package:flutter_application/page/task.dart';
-import 'package:flutter_application/page/profile.dart';
+import 'package:flutter_application/pages/splash.dart';
+import 'package:flutter_application/pages/list_task.dart';
+import 'package:flutter_application/pages/task.dart';
+import 'package:flutter_application/pages/profile.dart';
 import 'package:flutter_application/services/notif.dart';
 import 'firebase_options.dart';
 
@@ -39,7 +39,7 @@ class _MyAppState extends State<MyApp> {
       navigatorKey: MyApp.navigatorKey,
       theme: ThemeData(scaffoldBackgroundColor: Colors.white),
       debugShowCheckedModeBanner: false,
-      home: const CheckUser(),
+      home: const SplashScreen(),
     );
   }
 }
