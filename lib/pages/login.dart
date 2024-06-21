@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application/auth.dart';
+import 'package:flutter_application/services/auth.dart';
 import 'package:flutter_application/main.dart';
 
 class LoginPage extends StatelessWidget {

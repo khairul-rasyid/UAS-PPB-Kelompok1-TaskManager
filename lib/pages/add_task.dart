@@ -1,7 +1,9 @@
+import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application/dataclass.dart';
-import 'package:flutter_application/dbservices.dart';
+import 'package:flutter_application/services/dbservices.dart';
+import 'package:flutter_application/services/notif.dart';
 import 'package:intl/intl.dart';
 
 class AddTask extends StatefulWidget {
@@ -15,7 +17,11 @@ class AddTask extends StatefulWidget {
 class _AddTaskState extends State<AddTask> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
-  final TextEditingController _dateTimeController = TextEditingController();
+  final TextEditingController _timeController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+
+  DateTime? date;
+  TimeOfDay? time;
 
   String? _selectedItem;
 
@@ -63,11 +69,11 @@ class _AddTaskState extends State<AddTask> {
             _formField(
                 hintText: "Plan for a month", controller: _titleController),
             const SizedBox(height: 20),
-            _textForm(text: "Date & Time"),
+            _textForm(text: "Date"),
             TextFormField(
-              controller: _dateTimeController,
+              controller: _dateController,
               decoration: InputDecoration(
-                hintText: DateFormat('dd-MM-yyyy HH:mm').format(DateTime.now()),
+                hintText: DateFormat('dd MMMM yyyy').format(DateTime.now()),
                 suffixIcon: const Icon(Icons.calendar_today),
               ),
               readOnly: true,
@@ -80,26 +86,34 @@ class _AddTaskState extends State<AddTask> {
                 );
 
                 if (pickedDate != null) {
-                  // ignore: use_build_context_synchronously
-                  TimeOfDay? pickedTime = await showTimePicker(
-                    context: context,
-                    initialTime: TimeOfDay.now(),
-                  );
+                  setState(() {
+                    date = pickedDate;
+                    _dateController.text =
+                        DateFormat('dd MMMM yyyy').format(date!);
+                  });
+                }
+              },
+            ),
+            const SizedBox(height: 20),
+            _textForm(text: "Time"),
+            TextFormField(
+              controller: _timeController,
+              decoration: InputDecoration(
+                hintText: DateFormat('HH:mm').format(DateTime.now()),
+                suffixIcon: const Icon(Icons.schedule),
+              ),
+              readOnly: true,
+              onTap: () async {
+                TimeOfDay? pickedTime = await showTimePicker(
+                    context: context, initialTime: TimeOfDay.now());
 
-                  if (pickedTime != null) {
-                    DateTime finalDateTime = DateTime(
-                        pickedDate.year,
-                        pickedDate.month,
-                        pickedDate.day,
-                        pickedTime.hour,
-                        pickedTime.minute);
-
-                    String formattedDateTime =
-                        DateFormat('dd-MM-yyyy HH:mm').format(finalDateTime);
-                    setState(() {
-                      _dateTimeController.text = formattedDateTime;
-                    });
-                  }
+                if (pickedTime != null) {
+                  setState(() {
+                    time = pickedTime;
+                    // final datetime = DateTime(date!.year, date!.month,
+                    //     date!.day, time!.hour, time!.minute);
+                    _timeController.text = time!.format(context);
+                  });
                 }
               },
             ),
@@ -140,22 +154,34 @@ class _AddTaskState extends State<AddTask> {
                         MaterialStateProperty.all<Color>((Colors.white)),
                   ),
                   onPressed: () {
-                    DateTime parsedDateTime = DateFormat('dd-MM-yyyy HH:mm')
-                        .parse(_dateTimeController.text);
+                    // Combine date and time into a DateTime object
+                    Random random = Random();
+                    int randomId = random.nextInt(1000000000);
+                    final DateTime datetime = DateTime(date!.year, date!.month,
+                        date!.day, time!.hour, time!.minute);
 
-                    DateTime utcDateTime = parsedDateTime.toUtc();
+                    final DateTime dateTimeUtc8 =
+                        datetime.add(const Duration(hours: 8));
+
+                    Notif.scheduleNotif(
+                        id: randomId,
+                        title: _titleController.text,
+                        body: _descController.text,
+                        dateTime: datetime);
+
                     final newTask = ItemTask(
+                        idNotif: randomId,
                         userUid: userData.uid,
                         itemTitle: _titleController.text,
                         itemDesc: _descController.text,
-                        itemDatetime: utcDateTime.toUtc(),
+                        itemDatetime: dateTimeUtc8,
                         itemTags: _selectedItem.toString(),
                         itemStatus: "on going");
                     Database.addData(item: newTask);
                     Navigator.pop(context);
                   },
                   child: const Text("Create")),
-            )
+            ),
           ],
         ),
       ),

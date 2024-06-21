@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application/auth.dart';
-import 'package:flutter_application/list_task.dart';
-import 'package:flutter_application/login.dart';
+import 'package:flutter_application/services/auth.dart';
+import 'package:flutter_application/pages/list_task.dart';
+import 'package:flutter_application/pages/login.dart';
 
 class ProfilePage extends StatefulWidget {
   final User user;
@@ -53,12 +53,13 @@ class _ProfilePageState extends State<ProfilePage> {
                 )),
                 trailing: GestureDetector(
                   onTap: () {
-                    signOut();
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const LoginPage()),
-                    );
+                    _logoutDialog(context);
+                    // signOut();
+                    // Navigator.pushReplacement(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //       builder: (context) => const LoginPage()),
+                    // );
                   },
                   child: const Icon(
                     Icons.logout,
@@ -149,4 +150,48 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
       );
+
+  void _logoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Center(
+              child: Text(
+            'Logout',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+          )),
+          content: const Text(
+            'Are you sure?',
+            style: TextStyle(fontSize: 18),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'No',
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                signOut();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginPage()),
+                );
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'Yes',
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

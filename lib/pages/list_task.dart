@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application/dbservices.dart';
+import 'package:flutter_application/services/dbservices.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -75,12 +75,16 @@ class ListTask extends StatelessWidget {
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
                         DocumentSnapshot clData = snapshot.data!.docs[index];
+                        DateTime utc8 =
+                            (clData['datetime'] as Timestamp).toDate();
+                        DateTime dateTime =
+                            utc8.subtract(const Duration(hours: 8));
+                        DateTime localTime = dateTime.toLocal();
+
                         String dtTitle = clData['title'];
-                        Timestamp dtTimestamp = clData['datetime'];
-                        String dtDate = DateFormat('dd MMMM yyyy')
-                            .format(dtTimestamp.toDate());
-                        String dtTime =
-                            DateFormat('HH:mm').format(dtTimestamp.toDate());
+                        String dtDate =
+                            DateFormat('dd MMMM yyyy').format(localTime);
+                        String dtTime = DateFormat('HH:mm').format(localTime);
                         String dtDesc = clData['desc'];
                         String dtTags = clData['tags'];
                         return _buildTask(
