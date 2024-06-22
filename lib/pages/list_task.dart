@@ -158,6 +158,7 @@ class ListTask extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Container(
+              margin: const EdgeInsetsDirectional.only(bottom: 6.0),
               decoration: BoxDecoration(
                   color: _tagColor(tags: tags),
                   borderRadius: BorderRadius.circular(8)),
@@ -202,41 +203,4 @@ class ListTask extends StatelessWidget {
 
     return const Color(0xFFFFFFFF);
   }
-
-  // Widget _icon({required String status}) {
-  //   if (status == "personal") {
-  //     return _styleIcon(
-  //         nameIcon: Icons.person_outline_rounded,
-  //         color: const Color(0xFF858FE9));
-  //   } else if (status == "work") {
-  //     return _styleIcon(
-  //         nameIcon: Icons.work_outline_rounded, color: const Color(0xff7FC9E7));
-  //   } else if (status == "private") {
-  //     return _styleIcon(
-  //         nameIcon: Icons.lock_outline_rounded, color: const Color(0xFFE77D7D));
-  //   } else if (status == "meeting") {
-  //     return _styleIcon(
-  //         nameIcon: Icons.meeting_room_outlined,
-  //         color: const Color(0xFF81E89E));
-  //   } else if (status == "events") {
-  //     return _styleIcon(
-  //         nameIcon: Icons.calendar_month, color: const Color(0xFF858FE9));
-  //   }
-  //   return const Text("E");
-  // }
-
-  // Widget _styleIcon({required IconData nameIcon, required Color color}) {
-  //   return Container(
-  //     padding: const EdgeInsets.all(8),
-  //     decoration: BoxDecoration(
-  //       color: color,
-  //       borderRadius: BorderRadius.circular(10),
-  //     ),
-  //     child: Icon(
-  //       nameIcon,
-  //       color: Colors.white,
-  //       size: 18,
-  //     ),
-  //   );
-  // }
 }

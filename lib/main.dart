@@ -82,7 +82,7 @@ class _MyButtomNavBarState extends State<MyBottomNavBar> {
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         decoration: const BoxDecoration(boxShadow: [
           BoxShadow(
-              color: Color.fromARGB(255, 220, 235, 255),
+              color: Color.fromARGB(255, 233, 233, 233),
               blurRadius: 12,
               offset: Offset(0, 0))
         ]),
@@ -91,6 +91,8 @@ class _MyButtomNavBarState extends State<MyBottomNavBar> {
           child: BottomNavigationBar(
               selectedItemColor: const Color(0xFF5B67CA),
               unselectedItemColor: Colors.black,
+              showSelectedLabels: false,
+              showUnselectedLabels: false,
               currentIndex: myCurrentIndex,
               onTap: (index) {
                 setState(() {
@@ -351,9 +353,14 @@ class TaskCard extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: const BorderRadius.all(Radius.circular((14))),
-        ),
+            color: backgroundColor,
+            borderRadius: const BorderRadius.all(Radius.circular((14))),
+            boxShadow: [
+              BoxShadow(
+                  color: backgroundColor.withOpacity(0.8),
+                  blurRadius: 12,
+                  offset: const Offset(8, 10))
+            ]),
         padding: const EdgeInsets.all(12.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
