@@ -90,7 +90,7 @@ class _MyButtomNavBarState extends State<MyBottomNavBar> {
           borderRadius: BorderRadius.circular(15),
           child: BottomNavigationBar(
               selectedItemColor: const Color(0xFF5B67CA),
-              unselectedItemColor: Color(0xFFC6CEDD),
+              unselectedItemColor: const Color(0xFFC6CEDD),
               showSelectedLabels: false,
               showUnselectedLabels: false,
               currentIndex: myCurrentIndex,
