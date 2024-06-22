@@ -35,9 +35,11 @@ class ListTask extends StatelessWidget {
                   ),
                   const Spacer(flex: 5),
                   Text(
-                    "Task $title",
+                    "$title Tasks",
                     style: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.w500),
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF12175E)),
                   ),
                   const Spacer(flex: 6),
                 ],
@@ -62,7 +64,7 @@ class ListTask extends StatelessWidget {
                     return const Padding(
                       padding: EdgeInsets.only(top: 45),
                       child: Text(
-                        "No Task...",
+                        "There haven't been any task yet...",
                         style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
@@ -86,20 +88,23 @@ class ListTask extends StatelessWidget {
                             DateFormat('dd MMMM yyyy').format(localTime);
                         String dtTime = DateFormat('HH:mm').format(localTime);
                         String dtDesc = clData['desc'];
-                        String dtTags = clData['tags'];
+                        String dtStatus = clData['status'];
+                        String dtTags = clData["tags"];
+
                         return _buildTask(
                             // index: index,
                             title: dtTitle,
                             date: dtDate,
                             time: dtTime,
                             desc: dtDesc,
+                            status: dtStatus,
                             tags: dtTags);
                       },
                       itemCount: snapshot.data!.docs.length,
                     );
                   }
                   return const Center(
-                    child: Text("No Task"),
+                    child: Text("There haven't been any task yet..."),
                   );
                 },
               ),
@@ -116,19 +121,20 @@ class ListTask extends StatelessWidget {
     required String date,
     required String time,
     required String desc,
+    required String status,
     required String tags,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: ListTile(
-        tileColor: _tileColor(tags: tags),
+        tileColor: _tileColor(status: status),
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-        leading: _icon(tags: tags),
+        // leading: _icon(status: status),
         title: Text(
           title,
           style: const TextStyle(
-              color: Color(0xFF000000), fontWeight: FontWeight.w500),
+              color: Color(0xFF12175E), fontWeight: FontWeight.w500),
         ),
         titleTextStyle: const TextStyle(fontSize: 18),
         subtitle: Column(
@@ -137,70 +143,66 @@ class ListTask extends StatelessWidget {
             const SizedBox(height: 2),
             Row(
               children: [
-                Text(date.toString()),
+                Text(
+                  date.toString(),
+                  style: const TextStyle(
+                    color: Color(0xFF9AA8C7),
+                  ),
+                ),
                 const SizedBox(
                   width: 10,
                 ),
-                Text(time.toString())
+                Text(time.toString(),
+                    style: const TextStyle(
+                      color: Color(0xFF9AA8C7),
+                    ))
               ],
             ),
             const SizedBox(height: 8),
-            Text(tags),
+            Container(
+              margin: const EdgeInsetsDirectional.only(bottom: 6.0),
+              decoration: BoxDecoration(
+                  color: _tagColor(tags: tags),
+                  borderRadius: BorderRadius.circular(8)),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              child: Text(
+                tags,
+                style: const TextStyle(color: Colors.white),
+              ),
+            )
           ],
         ),
       ),
     );
   }
 
-  Color _tileColor({required String tags}) {
-    if (tags == "personal") {
-      return const Color(0xFF858FE9).withOpacity(0.18);
-    } else if (tags == "work") {
-      return const Color(0xFF7FC9E7).withOpacity(0.18);
-    } else if (tags == "private") {
-      return const Color(0xFFE77D7D).withOpacity(0.18);
-    } else if (tags == "meeting") {
-      return const Color(0xFF81E89E).withOpacity(0.18);
-    } else if (tags == "events") {
-      return const Color(0xFF858FE9).withOpacity(0.18);
+  Color _tileColor({required String status}) {
+    if (status == "pending") {
+      return const Color(0xFFEEF0FF);
+    } else if (status == "completed") {
+      return const Color(0xFFEBF9FF);
+    } else if (status == "canceled") {
+      return const Color(0xFFFFF2F2);
+    } else if (status == "on going") {
+      return const Color(0xFFCBF9D8);
     }
+
     return const Color(0xFFFFFFFF);
   }
 
-  Widget _icon({required String tags}) {
+  Color _tagColor({required String tags}) {
     if (tags == "personal") {
-      return _styleIcon(
-          nameIcon: Icons.person_outline_rounded,
-          color: const Color(0xFF858FE9));
+      return const Color(0xFF858FE9);
     } else if (tags == "work") {
-      return _styleIcon(
-          nameIcon: Icons.work_outline_rounded, color: const Color(0xff7FC9E7));
+      return const Color(0xFF7FC9E7);
     } else if (tags == "private") {
-      return _styleIcon(
-          nameIcon: Icons.lock_outline_rounded, color: const Color(0xFFE77D7D));
+      return const Color(0xFFE77D7D);
     } else if (tags == "meeting") {
-      return _styleIcon(
-          nameIcon: Icons.meeting_room_outlined,
-          color: const Color(0xFF81E89E));
+      return const Color(0xFF81E89E);
     } else if (tags == "events") {
-      return _styleIcon(
-          nameIcon: Icons.calendar_month, color: const Color(0xFF858FE9));
+      return const Color(0xFF858FE9);
     }
-    return const Text("E");
-  }
 
-  Widget _styleIcon({required IconData nameIcon, required Color color}) {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Icon(
-        nameIcon,
-        color: Colors.white,
-        size: 18,
-      ),
-    );
+    return const Color(0xFFFFFFFF);
   }
 }
