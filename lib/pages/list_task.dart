@@ -37,7 +37,9 @@ class ListTask extends StatelessWidget {
                   Text(
                     "$title Tasks",
                     style: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.w500),
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF12175E)),
                   ),
                   const Spacer(flex: 6),
                 ],
