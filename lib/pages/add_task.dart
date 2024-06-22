@@ -17,15 +17,17 @@ class AddTask extends StatefulWidget {
 class _AddTaskState extends State<AddTask> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
-  final TextEditingController _timeController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _timeController = TextEditingController();
 
   DateTime? date;
   TimeOfDay? time;
 
-  String? _selectedItem;
+  String? _selectedTags;
+  int? _selectedMinute;
 
   List<String> tags = ["personal", "work", "private", "meeting", "events"];
+  List<int> minute = [0, 15, 30, 45, 60];
 
   late User userData;
 
@@ -126,8 +128,8 @@ class _AddTaskState extends State<AddTask> {
             const SizedBox(height: 20),
             _textForm(text: "Tags"),
             DropdownButtonFormField<String>(
-              hint: const Text("Tags for task"),
-              value: _selectedItem,
+              hint: const Text("Select tags"),
+              value: _selectedTags,
               items: tags.map((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
@@ -136,7 +138,24 @@ class _AddTaskState extends State<AddTask> {
               }).toList(),
               onChanged: (String? newValue) {
                 setState(() {
-                  _selectedItem = newValue;
+                  _selectedTags = newValue;
+                });
+              },
+            ),
+            const SizedBox(height: 20),
+            _textForm(text: "Remind ... minutes early"),
+            DropdownButtonFormField<int>(
+              hint: const Text("Select minute"),
+              value: _selectedMinute,
+              items: minute.map((int value) {
+                return DropdownMenuItem<int>(
+                  value: value,
+                  child: Text(value.toString()),
+                );
+              }).toList(),
+              onChanged: (int? newValue) {
+                setState(() {
+                  _selectedMinute = newValue;
                 });
               },
             ),
@@ -157,31 +176,43 @@ class _AddTaskState extends State<AddTask> {
                               borderRadius:
                                   BorderRadius.all(Radius.circular(14))))),
                   onPressed: () {
-                    // Combine date and time into a DateTime object
-                    Random random = Random();
-                    int randomId = random.nextInt(1000000000);
-                    final DateTime datetime = DateTime(date!.year, date!.month,
-                        date!.day, time!.hour, time!.minute);
+                    if (_titleController.text != "" ||
+                        _descController.text != "" ||
+                        _dateController.text != "" ||
+                        _timeController.text != "" ||
+                        _selectedTags != null ||
+                        _selectedMinute != null) {
+                      Random random = Random();
+                      int randomId = random.nextInt(1000000000);
 
-                    final DateTime dateTimeUtc8 =
-                        datetime.add(const Duration(hours: 8));
+                      final DateTime datetime = DateTime(date!.year,
+                          date!.month, date!.day, time!.hour, time!.minute);
 
-                    Notif.scheduleNotif(
-                        id: randomId,
-                        title: _titleController.text,
-                        body: _descController.text,
-                        dateTime: datetime);
+                      final DateTime dateNotif = datetime
+                          .subtract(Duration(minutes: _selectedMinute!));
 
-                    final newTask = ItemTask(
-                        idNotif: randomId,
-                        userUid: userData.uid,
-                        itemTitle: _titleController.text,
-                        itemDesc: _descController.text,
-                        itemDatetime: dateTimeUtc8,
-                        itemTags: _selectedItem.toString(),
-                        itemStatus: "on going");
-                    Database.addData(item: newTask);
-                    Navigator.pop(context);
+                      Notif.scheduleNotif(
+                          id: randomId,
+                          title: _titleController.text,
+                          body: _descController.text,
+                          dateTime: dateNotif);
+
+                      final DateTime dateTimeUtc8 =
+                          datetime.add(const Duration(hours: 8));
+
+                      final newTask = ItemTask(
+                          idNotif: randomId,
+                          userUid: userData.uid,
+                          itemTitle: _titleController.text,
+                          itemDesc: _descController.text,
+                          itemDatetime: dateTimeUtc8,
+                          itemTags: _selectedTags.toString(),
+                          itemStatus: "on going");
+                      Database.addData(item: newTask);
+                      Navigator.pop(context);
+                    } else {
+                      return _validateDialog(context);
+                    }
                   },
                   child: const Text("Create")),
             ),
@@ -208,5 +239,35 @@ Widget _formField(
     controller: controller,
     decoration: InputDecoration(
         hintText: hintText, hintStyle: const TextStyle(fontSize: 16)),
+  );
+}
+
+void _validateDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Center(
+            child: Text(
+          'Can not be empty',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+        )),
+        content: const Text(
+          'Fill in all forms',
+          style: TextStyle(fontSize: 18),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text(
+              'OK',
+              style: TextStyle(fontSize: 18),
+            ),
+          ),
+        ],
+      );
+    },
   );
 }

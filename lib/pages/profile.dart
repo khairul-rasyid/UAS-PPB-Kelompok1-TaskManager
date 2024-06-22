@@ -54,12 +54,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 trailing: GestureDetector(
                   onTap: () {
                     _logoutDialog(context);
-                    // signOut();
-                    // Navigator.pushReplacement(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //       builder: (context) => const LoginPage()),
-                    // );
                   },
                   child: const Icon(
                     Icons.logout,
