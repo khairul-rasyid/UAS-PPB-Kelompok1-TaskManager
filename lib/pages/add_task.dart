@@ -40,7 +40,7 @@ class _AddTaskState extends State<AddTask> {
     return Scaffold(
         body: SingleChildScrollView(
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+        margin: const EdgeInsets.symmetric(vertical: 50, horizontal: 20),
         child: Column(
           // mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -144,15 +144,18 @@ class _AddTaskState extends State<AddTask> {
               height: 30,
             ),
             SizedBox(
-              height: 40,
+              height: 50,
               width: 500,
               child: ElevatedButton(
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                        const Color(0xFF5B67CA)),
-                    foregroundColor:
-                        MaterialStateProperty.all<Color>((Colors.white)),
-                  ),
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          const Color(0xFF5B67CA)),
+                      foregroundColor:
+                          MaterialStateProperty.all<Color>((Colors.white)),
+                      shape: const MaterialStatePropertyAll(
+                          RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(14))))),
                   onPressed: () {
                     // Combine date and time into a DateTime object
                     Random random = Random();
@@ -194,6 +197,7 @@ Widget _textForm({required String text}) {
     text,
     style: const TextStyle(
       fontSize: 14,
+      color: Color(0xFF8A8BB3),
     ),
   );
 }
