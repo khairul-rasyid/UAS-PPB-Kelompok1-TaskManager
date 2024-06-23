@@ -207,7 +207,7 @@ class _AddTaskState extends State<AddTask> {
                                 id: randomId,
                                 title: "Task Reminder",
                                 body:
-                                    "You have ${_titleController.text.capitalize} to complete today at ${time!.hour} : ${time!.minute}",
+                                    "You have ${_titleController.text.capitalize} to complete today at ${time!.hour}:${time!.minute}",
                                 dateTime: dateNotif);
 
                             final DateTime dateTimeUtc8 =
