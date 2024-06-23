@@ -36,7 +36,7 @@ class ListTask extends StatelessWidget {
                   ),
                   const Spacer(flex: 5),
                   Text(
-                    "Task $title",
+                    "$title Tasks",
                     style: const TextStyle(
                         fontSize: 20, fontWeight: FontWeight.w500),
                   ),
@@ -139,7 +139,7 @@ class ListTask extends StatelessWidget {
                       tags: tags,
                       idNotif: idNotif)));
         },
-        tileColor: _tileColor(tags: tags),
+        tileColor: _tileColor(tags: tags).withOpacity(0.18),
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
         leading: _icon(tags: tags),
@@ -148,22 +148,32 @@ class ListTask extends StatelessWidget {
           style: const TextStyle(
               color: Color(0xFF000000), fontWeight: FontWeight.w500),
         ),
-        titleTextStyle: const TextStyle(fontSize: 18),
+        titleTextStyle: const TextStyle(fontSize: 16),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 2),
             Row(
               children: [
-                Text(date.toString()),
+                Text(
+                  date.toString(),
+                  style: const TextStyle(
+                    color: Color(0xFF8A8BB3),
+                  ),
+                ),
                 const SizedBox(
                   width: 10,
                 ),
-                Text(time.toString())
+                Text(
+                  time.toString(),
+                  style: const TextStyle(
+                    color: Color(0xFF8A8BB3),
+                  ),
+                )
               ],
             ),
             const SizedBox(height: 8),
-            Text(tags),
+            _tags(tagsName: tags),
           ],
         ),
       ),
@@ -172,15 +182,15 @@ class ListTask extends StatelessWidget {
 
   Color _tileColor({required String tags}) {
     if (tags == "personal") {
-      return const Color(0xFF858FE9).withOpacity(0.18);
+      return const Color(0xFF858FE9);
     } else if (tags == "work") {
-      return const Color(0xFF7FC9E7).withOpacity(0.18);
+      return const Color(0xFF7FC9E7);
     } else if (tags == "private") {
-      return const Color(0xFFE77D7D).withOpacity(0.18);
+      return const Color(0xFFE77D7D);
     } else if (tags == "meeting") {
-      return const Color(0xFF81E89E).withOpacity(0.18);
+      return const Color(0xFF81E89E);
     } else if (tags == "events") {
-      return const Color(0xFF858FE9).withOpacity(0.18);
+      return const Color(0xFF858FE9);
     }
     return const Color(0xFFFFFFFF);
   }
@@ -218,6 +228,23 @@ class ListTask extends StatelessWidget {
         nameIcon,
         color: Colors.white,
         size: 18,
+      ),
+    );
+  }
+
+  Widget _tags({required String tagsName}) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 6),
+      padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 8),
+      decoration: BoxDecoration(
+        color: _tileColor(tags: tagsName).withOpacity(1),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Text(
+        tagsName,
+        style: const TextStyle(
+          color: Color(0xFFFFFFFF),
+        ),
       ),
     );
   }

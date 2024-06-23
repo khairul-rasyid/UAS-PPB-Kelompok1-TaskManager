@@ -82,7 +82,7 @@ class _MyButtomNavBarState extends State<MyBottomNavBar> {
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         decoration: BoxDecoration(boxShadow: [
           BoxShadow(
-              color: Color(0xFFC6C6C6).withOpacity(0.8),
+              color: const Color(0xFFC6C6C6).withOpacity(0.8),
               blurRadius: 8,
               offset: const Offset(0, 0))
         ]),
@@ -90,7 +90,7 @@ class _MyButtomNavBarState extends State<MyBottomNavBar> {
           borderRadius: BorderRadius.circular(15),
           child: BottomNavigationBar(
               selectedItemColor: const Color(0xFF5B67CA),
-              unselectedItemColor: Color(0xFFC6C6C6),
+              unselectedItemColor: const Color(0xFFC6C6C6),
               showSelectedLabels: false,
               showUnselectedLabels: false,
               currentIndex: myCurrentIndex,
