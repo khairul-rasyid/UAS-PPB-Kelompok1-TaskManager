@@ -57,16 +57,6 @@ class Database {
     await taskTable.doc(docsName).delete();
   }
 
-  // static Future<int> getTaskCountByStatus(
-  //     {required String userUid, required String status}) async {
-  //   final query = taskTable
-  //       .where("userUid", isEqualTo: userUid)
-  //       .where("status", isEqualTo: status);
-  //   final querysnapshot = await query.get();
-
-  //   return querysnapshot.docs.length;
-  // }
-
   static Stream<int> getTaskCountByStatusStream(
       {required String userUid, required String status}) async* {
     // Stream controller for emitting count updates
@@ -89,22 +79,4 @@ class Database {
     // Yield the count stream
     yield* countController.stream;
   }
-
-  // static Map<String, Future<int>> getDataCountByStatus(String userUid) {
-  //   final completedCount =
-  //       getTaskCountByStatus(userUid: userUid, status: "completed");
-  //   final pendingCount =
-  //       getTaskCountByStatus(userUid: userUid, status: "completed");
-  //   final canceledCount =
-  //       getTaskCountByStatus(userUid: userUid, status: "completed");
-  //   final onGoingCount =
-  //       getTaskCountByStatus(userUid: userUid, status: "completed");
-
-  //   return {
-  //     "completed": completedCount,
-  //     "pending": pendingCount,
-  //     "canceled": canceledCount,
-  //     "on going": onGoingCount,
-  //   };
-  // }
 }

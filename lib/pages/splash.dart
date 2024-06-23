@@ -28,8 +28,8 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Center(
         child: Image.asset(
           'assets/images/splash.png',
-          width: 230,
-          height: 230,
+          width: 150,
+          height: 150,
           fit: BoxFit.cover,
         ),
       ),

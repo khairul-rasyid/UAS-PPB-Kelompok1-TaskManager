@@ -88,7 +88,7 @@ class _TaskPageState extends State<TaskPage> {
               const SizedBox(height: 10),
               // Widget untuk menampilkan kalender
               _buildTableCalendar(),
-              const SizedBox(height: 10),
+              const SizedBox(height: 18),
               // Widget untuk menampilkan hari dan waktu
               _buildDayAndTime(),
               // Widget untuk menampilkan tugas
@@ -123,13 +123,36 @@ class _TaskPageState extends State<TaskPage> {
                         String dtDesc = clData['desc'];
                         String dtTags = clData['tags'];
                         int dtIdNotif = clData['idNotif'];
-                        return _buildTask(
+                        return Dismissible(
+                          key: Key('$dtIdNotif'),
+                          confirmDismiss: (direction) =>
+                              _deleteTaskDialog(context),
+                          onDismissed: (direction) {
+                            Notif.cancelScheduledNotif(dtIdNotif);
+                            Database.deleteData(docsName: dtTitle);
+                          },
+                          background: Container(
+                            color: Colors.white,
+                            alignment: Alignment.centerLeft,
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: const Icon(Icons.delete, color: Colors.red),
+                          ),
+                          secondaryBackground: Container(
+                            color: Colors.white,
+                            alignment: Alignment.centerRight,
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: const Icon(Icons.delete, color: Colors.red),
+                          ),
+                          child: _buildTask(
+                            // index: index,
                             title: dtTitle,
                             date: dtDate,
                             time: dtTime,
                             desc: dtDesc,
                             tags: dtTags,
-                            idNotif: dtIdNotif);
+                            idNotif: dtIdNotif,
+                          ),
+                        );
                       },
                       itemCount: snapshot.data!.docs.length,
                     );
@@ -188,10 +211,10 @@ class _TaskPageState extends State<TaskPage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        Text(
-          '09 h 45 min',
-          style: TextStyle(fontSize: 18),
-        ),
+        // Text(
+        //   '09 h 45 min',
+        //   style: TextStyle(fontSize: 18),
+        // ),
       ],
     );
   }
@@ -208,9 +231,6 @@ class _TaskPageState extends State<TaskPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: ListTile(
-        onLongPress: () {
-          _deleteTaskDialog(context, idNotif, title);
-        },
         onTap: () {
           Navigator.push(
             context,
@@ -232,9 +252,11 @@ class _TaskPageState extends State<TaskPage> {
         title: Text(
           title,
           style: const TextStyle(
-              color: Color(0xFF000000), fontWeight: FontWeight.w500),
+            color: Color(0xFF000000),
+            fontWeight: FontWeight.w500,
+          ),
         ),
-        titleTextStyle: const TextStyle(fontSize: 18),
+        titleTextStyle: const TextStyle(fontSize: 20),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -249,7 +271,7 @@ class _TaskPageState extends State<TaskPage> {
               ],
             ),
             const SizedBox(height: 8),
-            Text(tags),
+            _tags(tagsName: tags),
           ],
         ),
       ),
@@ -308,8 +330,25 @@ class _TaskPageState extends State<TaskPage> {
     );
   }
 
-  void _deleteTaskDialog(BuildContext context, int idNotif, String title) {
-    showDialog(
+  Widget _tags({required String tagsName}) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 6),
+      padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 8),
+      decoration: BoxDecoration(
+        color: _tileColor(tags: tagsName).withOpacity(1),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Text(
+        tagsName,
+        style: const TextStyle(
+          color: Color(0xFFFFFFFF),
+        ),
+      ),
+    );
+  }
+
+  Future<bool> _deleteTaskDialog(BuildContext context) async {
+    return await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -324,20 +363,14 @@ class _TaskPageState extends State<TaskPage> {
           ),
           actions: <Widget>[
             TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+              onPressed: () => Navigator.of(context).pop(false),
               child: const Text(
                 'No',
                 style: TextStyle(fontSize: 18),
               ),
             ),
             TextButton(
-              onPressed: () {
-                Notif.cancelScheduledNotif(idNotif);
-                Database.deleteData(docsName: title);
-                Navigator.of(context).pop();
-              },
+              onPressed: () => Navigator.of(context).pop(true),
               child: const Text(
                 'Yes',
                 style: TextStyle(fontSize: 18),

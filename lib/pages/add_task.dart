@@ -16,6 +16,7 @@ class AddTask extends StatefulWidget {
 }
 
 class _AddTaskState extends State<AddTask> {
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
@@ -43,10 +44,10 @@ class _AddTaskState extends State<AddTask> {
     return Scaffold(
         body: SingleChildScrollView(
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+        margin: const EdgeInsets.symmetric(vertical: 50, horizontal: 20),
         child: Column(
           // mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
@@ -68,225 +69,231 @@ class _AddTaskState extends State<AddTask> {
               ],
             ),
             const SizedBox(height: 30),
-            _textForm(text: "Title"),
-            _formField(
-                hintText: "Plan for a month",
-                controller: _titleController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  return null;
-                }),
-            const SizedBox(height: 20),
-            _textForm(text: "Date"),
-            TextFormField(
-              controller: _dateController,
-              decoration: InputDecoration(
-                hintText: DateFormat('dd MMMM yyyy').format(DateTime.now()),
-                suffixIcon: const Icon(Icons.calendar_today),
-              ),
-              readOnly: true,
-              onTap: () async {
-                DateTime? pickedDate = await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime.now(),
-                  lastDate: DateTime(2101),
-                );
-
-                if (pickedDate != null) {
-                  setState(() {
-                    date = pickedDate;
-                    _dateController.text =
-                        DateFormat('dd MMMM yyyy').format(date!);
-                  });
-                }
-              },
-            ),
-            const SizedBox(height: 20),
-            _textForm(text: "Time"),
-            TextFormField(
-              controller: _timeController,
-              decoration: InputDecoration(
-                hintText: DateFormat('HH:mm').format(DateTime.now()),
-                suffixIcon: const Icon(Icons.schedule),
-              ),
-              readOnly: true,
-              onTap: () async {
-                TimeOfDay? pickedTime = await showTimePicker(
-                    context: context, initialTime: TimeOfDay.now());
-
-                if (pickedTime != null) {
-                  setState(() {
-                    time = pickedTime;
-                    // final datetime = DateTime(date!.year, date!.month,
-                    //     date!.day, time!.hour, time!.minute);
-                    _timeController.text = time!.format(context);
-                  });
-                }
-              },
-            ),
-            const SizedBox(height: 20),
-            _textForm(text: "Desciprion"),
-            _formField(
-                hintText: "Creating this month's work plan",
-                controller: _descController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  return null;
-                }),
-            const SizedBox(height: 20),
-            _textForm(text: "Tags"),
-            DropdownButtonFormField<String>(
-              hint: const Text("Select tags"),
-              value: _selectedTags,
-              items: tags.map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (String? newValue) {
-                setState(() {
-                  _selectedTags = newValue;
-                });
-              },
-            ),
-            const SizedBox(height: 20),
-            _textForm(text: "Remind ... minutes early"),
-            DropdownButtonFormField<int>(
-              hint: const Text("Select minute"),
-              value: _selectedMinute,
-              items: minute.map((int value) {
-                return DropdownMenuItem<int>(
-                  value: value,
-                  child: Text(value.toString()),
-                );
-              }).toList(),
-              onChanged: (int? newValue) {
-                setState(() {
-                  _selectedMinute = newValue;
-                });
-              },
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            SizedBox(
-              height: 40,
-              width: 500,
-              child: ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                        const Color(0xFF5B67CA)),
-                    foregroundColor:
-                        MaterialStateProperty.all<Color>((Colors.white)),
+            Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _textForm(text: "Title"),
+                  _formField(
+                      hintText: "Plan for a month",
+                      controller: _titleController,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter title!';
+                        }
+                        return null;
+                      }),
+                  const SizedBox(height: 20),
+                  _textForm(text: "Date"),
+                  _formField(
+                      hintText:
+                          DateFormat('dd MMMM yyyy').format(DateTime.now()),
+                      controller: _dateController,
+                      readOnly: true,
+                      suffixIcon: const Icon(Icons.calendar_today),
+                      onTap: () => _selectDate(context),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please select date!';
+                        }
+                        return null;
+                      }),
+                  const SizedBox(height: 20),
+                  _textForm(text: "Time"),
+                  _formField(
+                      hintText: DateFormat('HH:mm').format(DateTime.now()),
+                      controller: _timeController,
+                      readOnly: true,
+                      suffixIcon: const Icon(Icons.schedule),
+                      onTap: () => _selectTime(context),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please select time!';
+                        }
+                        return null;
+                      }),
+                  const SizedBox(height: 20),
+                  _textForm(text: "Description"),
+                  _formField(
+                      hintText: "Creating this month's work plan",
+                      controller: _descController,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter description!';
+                        }
+                        return null;
+                      }),
+                  const SizedBox(height: 20),
+                  _textForm(text: "Tags"),
+                  DropdownButtonFormField<String>(
+                      hint: const Text("Select tags"),
+                      value: _selectedTags,
+                      items: tags.map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _selectedTags = newValue;
+                        });
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please select tags!';
+                        }
+                        return null;
+                      }),
+                  const SizedBox(height: 20),
+                  _textForm(text: "Remind ... minutes early"),
+                  DropdownButtonFormField<int>(
+                      hint: const Text("Select minute"),
+                      value: _selectedMinute,
+                      items: minute.map((int value) {
+                        return DropdownMenuItem<int>(
+                          value: value,
+                          child: Text(value.toString()),
+                        );
+                      }).toList(),
+                      onChanged: (int? newValue) {
+                        setState(() {
+                          _selectedMinute = newValue;
+                        });
+                      },
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Please select minute!';
+                        }
+                        return null;
+                      }),
+                  const SizedBox(
+                    height: 30,
                   ),
-                  onPressed: () {
-                    if (_titleController.text != "" ||
-                        _descController.text != "" ||
-                        _dateController.text != "" ||
-                        _timeController.text != "" ||
-                        _selectedTags != null ||
-                        _selectedMinute != null) {
-                      Random random = Random();
-                      int randomId = random.nextInt(1000000000);
+                  SizedBox(
+                    height: 50,
+                    width: 500,
+                    child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              const Color(0xFF5B67CA)),
+                          foregroundColor:
+                              MaterialStateProperty.all<Color>((Colors.white)),
+                          shape: const MaterialStatePropertyAll(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(14),
+                              ),
+                            ),
+                          ),
+                        ),
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            Random random = Random();
+                            int randomId = random.nextInt(1000000000);
 
-                      final DateTime datetime = DateTime(date!.year,
-                          date!.month, date!.day, time!.hour, time!.minute);
+                            final DateTime datetime = DateTime(
+                                date!.year,
+                                date!.month,
+                                date!.day,
+                                time!.hour,
+                                time!.minute);
 
-                      final DateTime dateNotif = datetime
-                          .subtract(Duration(minutes: _selectedMinute!));
+                            final DateTime dateNotif = datetime
+                                .subtract(Duration(minutes: _selectedMinute!));
 
-                      Notif.scheduleNotif(
-                          id: randomId,
-                          title: _titleController.text,
-                          body: _descController.text,
-                          dateTime: dateNotif);
+                            Notif.scheduleNotif(
+                                id: randomId,
+                                title: "Task Reminder",
+                                body:
+                                    "You have ${_titleController.text.capitalize} to complete today at ${time!.hour} : ${time!.minute}",
+                                dateTime: dateNotif);
 
-                      final DateTime dateTimeUtc8 =
-                          datetime.add(const Duration(hours: 8));
+                            final DateTime dateTimeUtc8 =
+                                datetime.add(const Duration(hours: 8));
 
-                      final newTask = ItemTask(
-                          idNotif: randomId,
-                          userUid: userData.uid,
-                          itemTitle: _titleController.text,
-                          itemDesc: _descController.text,
-                          itemDatetime: dateTimeUtc8,
-                          itemTags: _selectedTags.toString(),
-                          itemStatus: "on going");
-                      Database.addData(item: newTask);
-                      Navigator.pop(context);
-                    } else {
-                      return _validateDialog(context);
-                    }
-                  },
-                  child: const Text("Create")),
+                            final newTask = ItemTask(
+                                idNotif: randomId,
+                                userUid: userData.uid,
+                                itemTitle: _titleController.text,
+                                itemDesc: _descController.text,
+                                itemDatetime: dateTimeUtc8,
+                                itemTags: _selectedTags.toString(),
+                                itemStatus: "on going");
+                            Database.addData(item: newTask);
+                            Navigator.pop(context);
+                          }
+                        },
+                        child: const Text("Create")),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
       ),
     ));
   }
-}
 
-Widget _textForm({required String text}) {
-  return Text(
-    text,
-    style: const TextStyle(
-      fontSize: 14,
-    ),
-  );
-}
+  Widget _textForm({required String text}) {
+    return Text(
+      text,
+      style: const TextStyle(
+        fontSize: 14,
+        color: Color(0xFF8A8BB3),
+      ),
+    );
+  }
 
-Widget _formField(
-    {required String hintText,
-    required TextEditingController controller,
-    Widget? suffixIcon,
-    bool readOnly = false,
-    VoidCallback? onTap,
-    required String? Function(String?) validator}) {
-  return TextFormField(
-    controller: controller,
-    decoration: InputDecoration(
-        hintText: hintText,
-        hintStyle: const TextStyle(fontSize: 16),
-        suffixIcon: suffixIcon),
-    readOnly: readOnly,
-    onTap: onTap,
-    validator: validator,
-  );
-}
+  Widget _formField(
+      {required String hintText,
+      required TextEditingController controller,
+      Widget? suffixIcon,
+      bool readOnly = false,
+      VoidCallback? onTap,
+      required String? Function(String?) validator}) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: const TextStyle(fontSize: 16),
+          suffixIcon: suffixIcon),
+      readOnly: readOnly,
+      onTap: onTap,
+      validator: validator,
+    );
+  }
 
-void _validateDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Center(
-            child: Text(
-          'Can not be empty',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-        )),
-        content: const Text(
-          'Fill in all forms',
-          style: TextStyle(fontSize: 18),
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text(
-              'OK',
-              style: TextStyle(fontSize: 18),
-            ),
-          ),
-        ],
-      );
-    },
-  );
+  Future<void> _selectDate(BuildContext context) async {
+    DateTime? pickedDate = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime.now(),
+        lastDate: DateTime(2101),
+        initialEntryMode: DatePickerEntryMode.calendarOnly);
+
+    if (pickedDate != null) {
+      setState(() {
+        date = pickedDate;
+        _dateController.text = DateFormat('dd MMMM yyyy').format(date!);
+      });
+    }
+  }
+
+  Future<void> _selectTime(BuildContext context) async {
+    TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+        initialEntryMode: TimePickerEntryMode.inputOnly);
+
+    if (pickedTime != null) {
+      setState(() {
+        time = pickedTime;
+        // final datetime = DateTime(date!.year, date!.month,
+        //     date!.day, time!.hour, time!.minute);
+        _timeController.text = time!.format(context);
+      });
+    }
+  }
 }

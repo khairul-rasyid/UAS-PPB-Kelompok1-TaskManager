@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application/services/dbservices.dart';
+import 'package:flutter_application/services/notif.dart';
+// import 'package:flutter_launcher_icons/xml_templates.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -35,9 +37,11 @@ class ListTask extends StatelessWidget {
                   ),
                   const Spacer(flex: 5),
                   Text(
-                    "Task $title",
+                    "$title Tasks",
                     style: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.w500),
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF12175E)),
                   ),
                   const Spacer(flex: 6),
                 ],
@@ -62,7 +66,7 @@ class ListTask extends StatelessWidget {
                     return const Padding(
                       padding: EdgeInsets.only(top: 45),
                       child: Text(
-                        "No Task...",
+                        "There haven't been any task yet...",
                         style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
@@ -87,19 +91,43 @@ class ListTask extends StatelessWidget {
                         String dtTime = DateFormat('HH:mm').format(localTime);
                         String dtDesc = clData['desc'];
                         String dtTags = clData['tags'];
-                        return _buildTask(
+                        int dtNotif = clData['idNotif'];
+                        return Dismissible(
+                          key: Key('$dtNotif'),
+                          confirmDismiss: (direction) =>
+                              _deleteTaskDialog(context),
+                          onDismissed: (direction) {
+                            Notif.cancelScheduledNotif(dtNotif);
+                            Database.deleteData(docsName: dtTitle);
+                          },
+                          background: Container(
+                            color: Colors.white,
+                            alignment: Alignment.centerLeft,
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: const Icon(Icons.delete, color: Colors.red),
+                          ),
+                          secondaryBackground: Container(
+                            color: Colors.white,
+                            alignment: Alignment.centerRight,
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: const Icon(Icons.delete, color: Colors.red),
+                          ),
+                          child: _buildTask(
                             // index: index,
                             title: dtTitle,
                             date: dtDate,
                             time: dtTime,
                             desc: dtDesc,
-                            tags: dtTags);
+                            tags: dtTags,
+                            idNotif: dtNotif,
+                          ),
+                        );
                       },
                       itemCount: snapshot.data!.docs.length,
                     );
                   }
                   return const Center(
-                    child: Text("No Task"),
+                    child: Text("There haven't been any task yet..."),
                   );
                 },
               ),
@@ -117,35 +145,52 @@ class ListTask extends StatelessWidget {
     required String time,
     required String desc,
     required String tags,
+    required int idNotif,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: ListTile(
-        tileColor: _tileColor(tags: tags),
+        leading: _icon(tags: tags),
+        tileColor: _tileColor(tags: tags).withOpacity(0.18),
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-        leading: _icon(tags: tags),
+        // leading: _icon(status: status),
         title: Text(
           title,
           style: const TextStyle(
-              color: Color(0xFF000000), fontWeight: FontWeight.w500),
+              color: Color(0xFF12175E), fontWeight: FontWeight.w500),
         ),
-        titleTextStyle: const TextStyle(fontSize: 18),
+        titleTextStyle: const TextStyle(fontSize: 20),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 2),
+            Text(
+              desc,
+              style: const TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 5),
             Row(
               children: [
-                Text(date.toString()),
+                Text(
+                  date.toString(),
+                  style: const TextStyle(
+                    color: Color(0xFF8A8BB3),
+                  ),
+                ),
                 const SizedBox(
                   width: 10,
                 ),
-                Text(time.toString())
+                Text(
+                  time.toString(),
+                  style: const TextStyle(
+                    color: Color(0xFF8A8BB3),
+                  ),
+                )
               ],
             ),
             const SizedBox(height: 8),
-            Text(tags),
+            _tags(tagsName: tags),
           ],
         ),
       ),
@@ -154,16 +199,17 @@ class ListTask extends StatelessWidget {
 
   Color _tileColor({required String tags}) {
     if (tags == "personal") {
-      return const Color(0xFF858FE9).withOpacity(0.18);
+      return const Color(0xFF858FE9);
     } else if (tags == "work") {
-      return const Color(0xFF7FC9E7).withOpacity(0.18);
+      return const Color(0xFF7FC9E7);
     } else if (tags == "private") {
-      return const Color(0xFFE77D7D).withOpacity(0.18);
+      return const Color(0xFFE77D7D);
     } else if (tags == "meeting") {
-      return const Color(0xFF81E89E).withOpacity(0.18);
+      return const Color(0xFF81E89E);
     } else if (tags == "events") {
-      return const Color(0xFF858FE9).withOpacity(0.18);
+      return const Color(0xFF858FE9);
     }
+
     return const Color(0xFFFFFFFF);
   }
 
@@ -201,6 +247,58 @@ class ListTask extends StatelessWidget {
         color: Colors.white,
         size: 18,
       ),
+    );
+  }
+
+  Widget _tags({required String tagsName}) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 6),
+      padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 8),
+      decoration: BoxDecoration(
+        color: _tileColor(tags: tagsName).withOpacity(1),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Text(
+        tagsName,
+        style: const TextStyle(
+          color: Color(0xFFFFFFFF),
+        ),
+      ),
+    );
+  }
+
+  Future<bool> _deleteTaskDialog(BuildContext context) async {
+    return await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Center(
+              child: Text(
+            'Delete Task',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+          )),
+          content: const Text(
+            'Are you sure to delete this task?',
+            style: TextStyle(fontSize: 18),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text(
+                'No',
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text(
+                'Yes',
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

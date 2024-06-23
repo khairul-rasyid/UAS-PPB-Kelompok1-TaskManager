@@ -25,7 +25,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       body: ListView(padding: EdgeInsets.zero, children: [
         const SizedBox(
-          height: 40,
+          height: 34,
         ),
         Container(
           decoration: BoxDecoration(
