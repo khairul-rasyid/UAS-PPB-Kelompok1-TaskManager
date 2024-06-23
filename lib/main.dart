@@ -166,7 +166,7 @@ class HomePage extends StatelessWidget {
                         return StaggeredGridTile.count(
                             crossAxisCellCount: 4,
                             mainAxisCellCount: 4.2,
-                            child: TaskCardNew(
+                            child: TaskCard(
                               userUid: user.uid,
                               cardName: "Completed",
                               numberOfTasks: "$count Tasks",
@@ -180,7 +180,7 @@ class HomePage extends StatelessWidget {
                       return StaggeredGridTile.count(
                           crossAxisCellCount: 4,
                           mainAxisCellCount: 4.2,
-                          child: TaskCardNew(
+                          child: TaskCard(
                             userUid: user.uid,
                             cardName: "Completed",
                             numberOfTasks: "0 Tasks",
@@ -200,12 +200,12 @@ class HomePage extends StatelessWidget {
                         return StaggeredGridTile.count(
                             crossAxisCellCount: 4,
                             mainAxisCellCount: 3,
-                            child: TaskCardNew(
+                            child: TaskCard(
                               userUid: user.uid,
                               cardName: "Pending",
                               numberOfTasks: "$count Tasks",
-                              backgroundColor: const Color(0xFF7DC8E7),
-                              textColor: const Color(0xFF12175E),
+                              backgroundColor: const Color(0xFF7D88E7),
+                              textColor: const Color(0xFFFFFFFF),
                             ));
                       } else if (snapshot.hasError) {
                         return Text("Error: ${snapshot.error}");
@@ -213,7 +213,7 @@ class HomePage extends StatelessWidget {
                       return StaggeredGridTile.count(
                           crossAxisCellCount: 4,
                           mainAxisCellCount: 3,
-                          child: TaskCardNew(
+                          child: TaskCard(
                             userUid: user.uid,
                             cardName: "Pending",
                             numberOfTasks: "0 Tasks",
@@ -232,7 +232,7 @@ class HomePage extends StatelessWidget {
                         return StaggeredGridTile.count(
                             crossAxisCellCount: 4,
                             mainAxisCellCount: 4.2,
-                            child: TaskCardNew(
+                            child: TaskCard(
                               userUid: user.uid,
                               cardName: "On Going",
                               numberOfTasks: "$count Tasks",
@@ -246,7 +246,7 @@ class HomePage extends StatelessWidget {
                       return StaggeredGridTile.count(
                           crossAxisCellCount: 4,
                           mainAxisCellCount: 4.2,
-                          child: TaskCardNew(
+                          child: TaskCard(
                             userUid: user.uid,
                             cardName: "On Going",
                             numberOfTasks: "0 Tasks",
@@ -266,7 +266,7 @@ class HomePage extends StatelessWidget {
                         return StaggeredGridTile.count(
                             crossAxisCellCount: 4,
                             mainAxisCellCount: 3,
-                            child: TaskCardNew(
+                            child: TaskCard(
                               userUid: user.uid,
                               cardName: "Canceled",
                               numberOfTasks: "$count Tasks",
@@ -279,7 +279,7 @@ class HomePage extends StatelessWidget {
                       return StaggeredGridTile.count(
                           crossAxisCellCount: 4,
                           mainAxisCellCount: 3,
-                          child: TaskCardNew(
+                          child: TaskCard(
                             userUid: user.uid,
                             cardName: "Canceled",
                             numberOfTasks: "0 Tasks",
@@ -297,65 +297,7 @@ class HomePage extends StatelessWidget {
 }
 
 class TaskCard extends StatelessWidget {
-  final IconData icon;
-  final String name;
-  final String task;
-  final Color bgColor;
-  final String userUid;
-  final double height;
-
-  const TaskCard(
-      {super.key,
-      required this.icon,
-      required this.name,
-      required this.task,
-      required this.bgColor,
-      required this.userUid,
-      required this.height});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => ListTask(
-                  userUid: userUid,
-                  field: 'status',
-                  condition: name.toLowerCase())),
-        );
-      },
-      child: Container(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            gradient:
-                LinearGradient(colors: [bgColor, bgColor.withOpacity(0.69)])),
-        padding: const EdgeInsets.all(12),
-        height: height,
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(
-                icon,
-                size: 42,
-              ),
-              Text(
-                name,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w400,
-                ),
-              )
-            ]),
-      ),
-    );
-  }
-}
-
-class TaskCardNew extends StatelessWidget {
-  const TaskCardNew({
+  const TaskCard({
     super.key,
     required this.userUid,
     required this.cardName,

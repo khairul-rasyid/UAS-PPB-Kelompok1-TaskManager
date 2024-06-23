@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application/dataclass.dart';
 import 'package:flutter_application/services/dbservices.dart';
 import 'package:flutter_application/services/notif.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class AddTask extends StatefulWidget {
@@ -69,7 +70,14 @@ class _AddTaskState extends State<AddTask> {
             const SizedBox(height: 30),
             _textForm(text: "Title"),
             _formField(
-                hintText: "Plan for a month", controller: _titleController),
+                hintText: "Plan for a month",
+                controller: _titleController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  return null;
+                }),
             const SizedBox(height: 20),
             _textForm(text: "Date"),
             TextFormField(
@@ -122,9 +130,14 @@ class _AddTaskState extends State<AddTask> {
             const SizedBox(height: 20),
             _textForm(text: "Desciprion"),
             _formField(
-              hintText: "Creating this month's work plan",
-              controller: _descController,
-            ),
+                hintText: "Creating this month's work plan",
+                controller: _descController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  return null;
+                }),
             const SizedBox(height: 20),
             _textForm(text: "Tags"),
             DropdownButtonFormField<String>(
@@ -230,11 +243,21 @@ Widget _textForm({required String text}) {
 }
 
 Widget _formField(
-    {required String hintText, required TextEditingController controller}) {
+    {required String hintText,
+    required TextEditingController controller,
+    Widget? suffixIcon,
+    bool readOnly = false,
+    VoidCallback? onTap,
+    required String? Function(String?) validator}) {
   return TextFormField(
     controller: controller,
     decoration: InputDecoration(
-        hintText: hintText, hintStyle: const TextStyle(fontSize: 16)),
+        hintText: hintText,
+        hintStyle: const TextStyle(fontSize: 16),
+        suffixIcon: suffixIcon),
+    readOnly: readOnly,
+    onTap: onTap,
+    validator: validator,
   );
 }
 
