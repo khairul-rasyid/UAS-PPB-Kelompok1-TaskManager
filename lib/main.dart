@@ -122,7 +122,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(10, 60, 10, 10),
+        padding: const EdgeInsets.fromLTRB(13, 60, 13, 10),
         child: Column(
           children: [
             Row(
@@ -139,9 +139,20 @@ class HomePage extends StatelessWidget {
                         color: Color(0xFF12175E),
                       ),
                     ),
-                    const Text("Let's make this day productive")
+                    const Text(
+                      "Let's make this day productive",
+                      style: TextStyle(
+                        color: Color(0xFF12175E),
+                      ),
+                    )
                   ],
                 ),
+                ClipOval(
+                  child: Image(
+                    image: NetworkImage("${user.photoURL}"),
+                    width: 38,
+                  ),
+                )
               ],
             ),
             const SizedBox(
@@ -173,8 +184,8 @@ class HomePage extends StatelessWidget {
 
                         return StaggeredGridTile.count(
                             crossAxisCellCount: 4,
-                            mainAxisCellCount: 4.2,
-                            child: TaskCardNew(
+                            mainAxisCellCount: 4.3,
+                            child: TaskCard(
                               userUid: user.uid,
                               cardName: "Completed",
                               numberOfTasks: "$count Tasks",
@@ -187,14 +198,15 @@ class HomePage extends StatelessWidget {
                       }
                       return StaggeredGridTile.count(
                           crossAxisCellCount: 4,
-                          mainAxisCellCount: 4.2,
-                          child: TaskCardNew(
+                          mainAxisCellCount: 4.3,
+                          child: TaskCard(
                             userUid: user.uid,
                             cardName: "Completed",
                             numberOfTasks: "0 Tasks",
                             backgroundColor: const Color(0xFF7DC8E7),
                             textColor: const Color(0xFF12175E),
                             imgSrc: "assets/images/imac-1.png",
+                            iconData: Icons.abc,
                           ));
                     },
                   ),
@@ -208,13 +220,13 @@ class HomePage extends StatelessWidget {
                         return StaggeredGridTile.count(
                             crossAxisCellCount: 4,
                             mainAxisCellCount: 3,
-                            child: TaskCardNew(
+                            child: TaskCard(
                               userUid: user.uid,
                               cardName: "Pending",
                               numberOfTasks: "$count Tasks",
                               backgroundColor: const Color(0xFF7D88E7),
                               textColor: Colors.white,
-                              iconData: Icons.timelapse_rounded,
+                              iconData: Icons.access_time,
                             ));
                       } else if (snapshot.hasError) {
                         return Text("Error: ${snapshot.error}");
@@ -222,13 +234,13 @@ class HomePage extends StatelessWidget {
                       return StaggeredGridTile.count(
                           crossAxisCellCount: 4,
                           mainAxisCellCount: 3,
-                          child: TaskCardNew(
+                          child: TaskCard(
                             userUid: user.uid,
                             cardName: "Pending",
                             numberOfTasks: "0 Tasks",
                             backgroundColor: const Color(0xFF7D88E7),
                             textColor: Colors.white,
-                            iconData: Icons.timelapse_rounded,
+                            iconData: Icons.access_time,
                           ));
                     },
                   ),
@@ -241,8 +253,8 @@ class HomePage extends StatelessWidget {
 
                         return StaggeredGridTile.count(
                             crossAxisCellCount: 4,
-                            mainAxisCellCount: 4.2,
-                            child: TaskCardNew(
+                            mainAxisCellCount: 4.3,
+                            child: TaskCard(
                               userUid: user.uid,
                               cardName: "On Going",
                               numberOfTasks: "$count Tasks",
@@ -255,8 +267,8 @@ class HomePage extends StatelessWidget {
                       }
                       return StaggeredGridTile.count(
                           crossAxisCellCount: 4,
-                          mainAxisCellCount: 4.2,
-                          child: TaskCardNew(
+                          mainAxisCellCount: 4.3,
+                          child: TaskCard(
                             userUid: user.uid,
                             cardName: "On Going",
                             numberOfTasks: "0 Tasks",
@@ -276,13 +288,13 @@ class HomePage extends StatelessWidget {
                         return StaggeredGridTile.count(
                             crossAxisCellCount: 4,
                             mainAxisCellCount: 3,
-                            child: TaskCardNew(
+                            child: TaskCard(
                               userUid: user.uid,
                               cardName: "Canceled",
                               numberOfTasks: "$count Tasks",
                               backgroundColor: const Color(0xFFE77D7D),
                               textColor: Colors.white,
-                              iconData: Icons.delete_outline_rounded,
+                              iconData: Icons.remove_circle_outline,
                             ));
                       } else if (snapshot.hasError) {
                         return Text("Error: ${snapshot.error}");
@@ -290,13 +302,13 @@ class HomePage extends StatelessWidget {
                       return StaggeredGridTile.count(
                           crossAxisCellCount: 4,
                           mainAxisCellCount: 3,
-                          child: TaskCardNew(
+                          child: TaskCard(
                             userUid: user.uid,
                             cardName: "Canceled",
                             numberOfTasks: "0 Tasks",
                             backgroundColor: const Color(0xFFE77D7D),
                             textColor: Colors.white,
-                            iconData: Icons.delete_outline_rounded,
+                            iconData: Icons.remove_circle_outline,
                           ));
                     },
                   ),
@@ -308,8 +320,8 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class TaskCardNew extends StatelessWidget {
-  const TaskCardNew({
+class TaskCard extends StatelessWidget {
+  const TaskCard({
     super.key,
     required this.userUid,
     required this.cardName,

@@ -38,7 +38,9 @@ class ListTask extends StatelessWidget {
                   Text(
                     "$title Tasks",
                     style: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.w500),
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        color: Color(0xFF12175E)),
                   ),
                   const Spacer(flex: 6),
                 ],
@@ -63,7 +65,7 @@ class ListTask extends StatelessWidget {
                     return const Padding(
                       padding: EdgeInsets.only(top: 45),
                       child: Text(
-                        "No Task...",
+                        "There haven't been any task yet...",
                         style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
@@ -103,7 +105,7 @@ class ListTask extends StatelessWidget {
                     );
                   }
                   return const Center(
-                    child: Text("No Task"),
+                    child: Text("There haven't been any task yet..."),
                   );
                 },
               ),
@@ -127,6 +129,7 @@ class ListTask extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: ListTile(
+        leading: _icon(tags: tags),
         onTap: () {
           Navigator.push(
               context,
@@ -142,11 +145,11 @@ class ListTask extends StatelessWidget {
         tileColor: _tileColor(tags: tags).withOpacity(0.18),
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-        leading: _icon(tags: tags),
+        // leading: _icon(status: status),
         title: Text(
           title,
           style: const TextStyle(
-              color: Color(0xFF000000), fontWeight: FontWeight.w500),
+              color: Color(0xFF12175E), fontWeight: FontWeight.w500),
         ),
         titleTextStyle: const TextStyle(fontSize: 16),
         subtitle: Column(
@@ -192,6 +195,7 @@ class ListTask extends StatelessWidget {
     } else if (tags == "events") {
       return const Color(0xFF858FE9);
     }
+
     return const Color(0xFFFFFFFF);
   }
 
@@ -214,6 +218,7 @@ class ListTask extends StatelessWidget {
       return _styleIcon(
           nameIcon: Icons.calendar_month, color: const Color(0xFF858FE9));
     }
+
     return const Text("E");
   }
 
