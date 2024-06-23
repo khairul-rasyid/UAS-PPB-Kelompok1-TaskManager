@@ -96,7 +96,7 @@ class _DetailTaskState extends State<DetailTask> {
 
             //button status
             Padding(
-              padding: const EdgeInsets.all(5.0),
+              padding: const EdgeInsets.all(0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -130,7 +130,7 @@ class _DetailTaskState extends State<DetailTask> {
       style: const TextStyle(
         letterSpacing: 1,
         fontSize: 14,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w400,
         color: Color(0xFF8A8BB3),
       ),
     );
@@ -140,8 +140,8 @@ class _DetailTaskState extends State<DetailTask> {
     return Text(
       text,
       style: const TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.w500,
+        fontSize: 16,
+        fontWeight: FontWeight.w400,
         color: Colors.black,
       ),
     );
@@ -160,8 +160,6 @@ class _DetailTaskState extends State<DetailTask> {
       required String newStatus,
       required int idNotif}) {
     return SizedBox(
-      width: 110,
-      height: 40,
       child: ElevatedButton(
         onPressed: () {
           final changeData = {'status': newStatus};
@@ -172,7 +170,9 @@ class _DetailTaskState extends State<DetailTask> {
         style: _colorButton(status: newStatus),
         child: Text(
           text,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+          style: const TextStyle(
+            fontSize: 12,
+          ),
         ),
       ),
     );
@@ -181,15 +181,15 @@ class _DetailTaskState extends State<DetailTask> {
   ButtonStyle _colorButton({required String status}) {
     if (status == "completed") {
       return ElevatedButton.styleFrom(
-          padding: const EdgeInsets.all(1),
-          backgroundColor: const Color(0xFF81E89E), // Warna background tombol
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+          backgroundColor: const Color(0xFF7DC8E7), // Warna background tombol
           foregroundColor: Colors.white, // Warna teks tombol
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10), // Sudut tombol
           ));
     } else if (status == "pending") {
       return ElevatedButton.styleFrom(
-          padding: const EdgeInsets.all(1),
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
           backgroundColor: const Color(0xFF7D88E7), // Warna background tombol
           foregroundColor: Colors.white, // Warna teks tombol
           shape: RoundedRectangleBorder(
@@ -197,13 +197,22 @@ class _DetailTaskState extends State<DetailTask> {
           ));
     } else if (status == "canceled") {
       return ElevatedButton.styleFrom(
-          padding: const EdgeInsets.all(1),
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
           backgroundColor: const Color(0xFFE77D7D), // Warna background tombol
           foregroundColor: Colors.white, // Warna teks tombol
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10), // Sudut tombol
           ));
+    } else if (status == "on going") {
+      return ElevatedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+          backgroundColor: const Color(0xFF81E89E), // Warna background tombol
+          foregroundColor: Colors.white, // Warna teks tombol
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10), // Sudut tombol
+          ));
     }
+
     return ElevatedButton.styleFrom();
   }
 }

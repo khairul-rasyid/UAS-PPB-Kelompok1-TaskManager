@@ -82,15 +82,17 @@ class _MyButtomNavBarState extends State<MyBottomNavBar> {
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         decoration: BoxDecoration(boxShadow: [
           BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 12,
+              color: Color(0xFFC6C6C6).withOpacity(0.8),
+              blurRadius: 8,
               offset: const Offset(0, 0))
         ]),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(15),
           child: BottomNavigationBar(
               selectedItemColor: const Color(0xFF5B67CA),
-              unselectedItemColor: Colors.black,
+              unselectedItemColor: Color(0xFFC6C6C6),
+              showSelectedLabels: false,
+              showUnselectedLabels: false,
               currentIndex: myCurrentIndex,
               onTap: (index) {
                 setState(() {
@@ -98,11 +100,12 @@ class _MyButtomNavBarState extends State<MyBottomNavBar> {
                 });
               },
               items: const <BottomNavigationBarItem>[
-                BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
                 BottomNavigationBarItem(
-                    icon: Icon(Icons.assignment), label: "Task"),
+                    icon: Icon(Icons.home, size: 28), label: "Home"),
                 BottomNavigationBarItem(
-                    icon: Icon(Icons.person), label: "Profile"),
+                    icon: Icon(Icons.assignment, size: 28), label: "Task"),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.person, size: 28), label: "Profile"),
               ]),
         ),
       ),
@@ -133,6 +136,7 @@ class HomePage extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
+                        color: Color(0xFF12175E),
                       ),
                     ),
                     const Text("Let's make this day productive")
@@ -147,7 +151,11 @@ class HomePage extends StatelessWidget {
               alignment: Alignment.topLeft,
               child: Text(
                 "Task",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF12175E),
+                ),
               ),
             ),
             const SizedBox(height: 15),
@@ -204,8 +212,9 @@ class HomePage extends StatelessWidget {
                               userUid: user.uid,
                               cardName: "Pending",
                               numberOfTasks: "$count Tasks",
-                              backgroundColor: const Color(0xFF7DC8E7),
-                              textColor: const Color(0xFF12175E),
+                              backgroundColor: const Color(0xFF7D88E7),
+                              textColor: Colors.white,
+                              iconData: Icons.timelapse_rounded,
                             ));
                       } else if (snapshot.hasError) {
                         return Text("Error: ${snapshot.error}");
@@ -219,6 +228,7 @@ class HomePage extends StatelessWidget {
                             numberOfTasks: "0 Tasks",
                             backgroundColor: const Color(0xFF7D88E7),
                             textColor: Colors.white,
+                            iconData: Icons.timelapse_rounded,
                           ));
                     },
                   ),
@@ -238,7 +248,7 @@ class HomePage extends StatelessWidget {
                               numberOfTasks: "$count Tasks",
                               backgroundColor: const Color(0xFF81E89E),
                               textColor: const Color(0xFF12175E),
-                              imgSrc: "assets/images/imac-1.png",
+                              imgSrc: "assets/images/folder-1.png",
                             ));
                       } else if (snapshot.hasError) {
                         return Text("Error: ${snapshot.error}");
@@ -272,6 +282,7 @@ class HomePage extends StatelessWidget {
                               numberOfTasks: "$count Tasks",
                               backgroundColor: const Color(0xFFE77D7D),
                               textColor: Colors.white,
+                              iconData: Icons.delete_outline_rounded,
                             ));
                       } else if (snapshot.hasError) {
                         return Text("Error: ${snapshot.error}");
@@ -285,70 +296,13 @@ class HomePage extends StatelessWidget {
                             numberOfTasks: "0 Tasks",
                             backgroundColor: const Color(0xFFE77D7D),
                             textColor: Colors.white,
+                            iconData: Icons.delete_outline_rounded,
                           ));
                     },
                   ),
                 ])
           ],
         ),
-      ),
-    );
-  }
-}
-
-class TaskCard extends StatelessWidget {
-  final IconData icon;
-  final String name;
-  final String task;
-  final Color bgColor;
-  final String userUid;
-  final double height;
-
-  const TaskCard(
-      {super.key,
-      required this.icon,
-      required this.name,
-      required this.task,
-      required this.bgColor,
-      required this.userUid,
-      required this.height});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => ListTask(
-                  userUid: userUid,
-                  field: 'status',
-                  condition: name.toLowerCase())),
-        );
-      },
-      child: Container(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            gradient:
-                LinearGradient(colors: [bgColor, bgColor.withOpacity(0.69)])),
-        padding: const EdgeInsets.all(12),
-        height: height,
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(
-                icon,
-                size: 42,
-              ),
-              Text(
-                name,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w400,
-                ),
-              )
-            ]),
       ),
     );
   }
@@ -391,6 +345,13 @@ class TaskCardNew extends StatelessWidget {
         decoration: BoxDecoration(
           color: backgroundColor,
           borderRadius: const BorderRadius.all(Radius.circular((14))),
+          boxShadow: [
+            BoxShadow(
+                color: backgroundColor.withOpacity(0.6),
+                blurRadius: 5,
+                spreadRadius: 0,
+                offset: const Offset(6, 8))
+          ],
         ),
         padding: const EdgeInsets.all(12.0),
         child: Row(
@@ -419,7 +380,10 @@ class TaskCardNew extends StatelessWidget {
                       fontWeight: FontWeight.w500,
                       color: textColor,
                     )),
-                Text(numberOfTasks),
+                Text(
+                  numberOfTasks,
+                  style: TextStyle(color: textColor),
+                ),
               ],
             ),
             Icon(Icons.arrow_right_alt_outlined, color: textColor)

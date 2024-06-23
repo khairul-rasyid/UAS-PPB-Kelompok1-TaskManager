@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application/pages/detail_task.dart';
 import 'package:flutter_application/services/dbservices.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -87,13 +88,16 @@ class ListTask extends StatelessWidget {
                         String dtTime = DateFormat('HH:mm').format(localTime);
                         String dtDesc = clData['desc'];
                         String dtTags = clData['tags'];
+                        int dtNotif = clData['idNotif'];
                         return _buildTask(
                             // index: index,
                             title: dtTitle,
                             date: dtDate,
                             time: dtTime,
                             desc: dtDesc,
-                            tags: dtTags);
+                            tags: dtTags,
+                            idNotif: dtNotif,
+                            context: context);
                       },
                       itemCount: snapshot.data!.docs.length,
                     );
@@ -117,10 +121,24 @@ class ListTask extends StatelessWidget {
     required String time,
     required String desc,
     required String tags,
+    required int idNotif,
+    required BuildContext context,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: ListTile(
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => DetailTask(
+                      title: title,
+                      date: date,
+                      time: time,
+                      desc: desc,
+                      tags: tags,
+                      idNotif: idNotif)));
+        },
         tileColor: _tileColor(tags: tags),
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
