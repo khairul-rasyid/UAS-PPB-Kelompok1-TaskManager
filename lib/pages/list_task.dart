@@ -101,16 +101,32 @@ class ListTask extends StatelessWidget {
                             Database.deleteData(docsName: dtTitle);
                           },
                           background: Container(
-                            color: Colors.white,
-                            alignment: Alignment.centerLeft,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: const Color(0xFFe15b5b),
+                            ),
+                            alignment: Alignment.center,
+                            margin: const EdgeInsets.symmetric(vertical: 6),
                             padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: const Icon(Icons.delete, color: Colors.red),
+                            child: const Icon(
+                              Icons.delete,
+                              color: Color(0xFFfdf6f6),
+                              size: 38,
+                            ),
                           ),
                           secondaryBackground: Container(
-                            color: Colors.white,
-                            alignment: Alignment.centerRight,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: const Color(0xFFe15b5b),
+                            ),
+                            alignment: Alignment.center,
+                            margin: const EdgeInsets.symmetric(vertical: 6),
                             padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: const Icon(Icons.delete, color: Colors.red),
+                            child: const Icon(
+                              Icons.delete,
+                              color: Color(0xFFfdf6f6),
+                              size: 38,
+                            ),
                           ),
                           child: _buildTask(
                             // index: index,
@@ -150,7 +166,7 @@ class ListTask extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: ListTile(
-        leading: _icon(tags: tags),
+        // leading: _icon(tags: tags),
         tileColor: _tileColor(tags: tags).withOpacity(0.18),
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
@@ -164,11 +180,6 @@ class ListTask extends StatelessWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 2),
-            Text(
-              desc,
-              style: const TextStyle(fontSize: 16),
-            ),
             const SizedBox(height: 5),
             Row(
               children: [
@@ -188,6 +199,11 @@ class ListTask extends StatelessWidget {
                   ),
                 )
               ],
+            ),
+            const SizedBox(height: 2),
+            Text(
+              desc,
+              style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 8),
             _tags(tagsName: tags),
