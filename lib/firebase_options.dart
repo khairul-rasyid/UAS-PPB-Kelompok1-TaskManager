@@ -77,5 +77,4 @@ class DefaultFirebaseOptions {
     authDomain: 'dailoz-firebase.firebaseapp.com',
     storageBucket: 'dailoz-firebase.appspot.com',
   );
-
 }
